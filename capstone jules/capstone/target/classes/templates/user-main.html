@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" th:href="@{/css/user-main.css}">
+
+    <style>
+        /* Initially hide the messages */
+        .error-message, .success-message {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Hidden state to fade out the messages */
+        .hidden {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a th:href="@{/user-main}">User Management</a></li>
+        <li><a th:href="@{/college-class}">Manage College Classes</a></li>
+        <li><a th:href="@{/class-report}">Create Class Report</a></li>
+        <li><a th:href="@{/}">Back to Home</a></li>
+    </ul>
+</nav>
+
+<!-- Error and Success Messages -->
+<div th:if="${errorMessage}" class="error-message" id="errorMessage" style="display:none;">
+    <p th:text="${errorMessage}"></p>
+</div>
+<div th:if="${successMessage}" class="success-message" id="successMessage" style="display:none;">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<section>
+    <h2>All Users</h2>
+    <ul>
+        <li th:each="user : ${users}">
+            <span th:text="${user.firstName + ' ' + user.lastName}"></span>
+            <!-- Form for editing user -->
+            <form th:action="@{/user-main/edit}" method="get" style="display:inline;">
+                <input type="hidden" name="id" th:value="${user.id}" />
+                <button type="submit">Edit</button>
+            </form>
+            <!-- Form for deleting user -->
+            <form th:action="@{/user-main/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${user.id}" />
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
+</section>
+
+<!-- User Form Section for Adding or Editing Users -->
+<section id="user-form-section">
+    <h2 th:text="${userForm.id != null ? 'Edit User' : 'Add New User'}"></h2>
+
+    <form th:action="@{/user-main/save}" th:object="${userForm}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- First Name -->
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter first name" required oninput="generateUsernameAndPassword()" />
+        </div>
+
+        <!-- Last Name -->
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter last name" required oninput="generateUsernameAndPassword()" />
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" placeholder="Enter email" required />
+        </div>
+
+        <!-- Username -->
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" readonly />
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label for="password">Password:</label>
+            <input type="text" id="password" th:field="*{password}" readonly />
+        </div>
+
+        <div>
+            <button type="submit" th:text="${userForm.id != null ? 'Update User' : 'Add User'}"></button>
+        </div>
+    </form>
+</section>
+
+<script>
+    // Auto-generate Username and Password based on First and Last Name
+    function generateUsernameAndPassword() {
+        const firstName = document.getElementById('firstName').value.toLowerCase();
+        const lastName = document.getElementById('lastName').value.toLowerCase();
+        const usernameField = document.getElementById('username');
+        const passwordField = document.getElementById('password');
+
+        if (firstName && lastName) {
+            const username = firstName + '.' + lastName;
+            const password = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase() + Math.floor(Math.random() * 10000);
+            usernameField.value = username;
+            passwordField.value = password;
+        }
+    }
+
+    // Show messages and hide them after 30 seconds
+    window.onload = function() {
+        var errorMessage = document.getElementById('errorMessage');
+        var successMessage = document.getElementById('successMessage');
+
+        // Check and display error message if exists
+        if (errorMessage && errorMessage.textContent.trim() !== "") {
+            errorMessage.style.display = 'block';
+            setTimeout(function() {
+                errorMessage.classList.add('hidden');
+                setTimeout(() => errorMessage.style.display = 'none', 500);  // Hide after fade-out
+            }, 30000); // 30 seconds
+        }
+
+        // Check and display success message if exists
+        if (successMessage && successMessage.textContent.trim() !== "") {
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.classList.add('hidden');
+                setTimeout(() => successMessage.style.display = 'none', 500);  // Hide after fade-out
+            }, 20000); // 20 seconds
+        }
+    };
+</script>
+</body>
+</html>

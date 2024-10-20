@@ -1,0 +1,144 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Lighter background color */
+}
+
+/* Navigation */
+nav ul {
+    background-color: #333;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    padding: 10px 20px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+
+/* Error and success messages */
+.error-message, .success-message {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.error-message {
+    background-color: #f8d7da; /* Error background */
+    color: #721c24; /* Error text */
+    border: 1px solid #f5c6cb; /* Error border */
+}
+
+.success-message {
+    background-color: #d4edda; /* Success background */
+    color: #155724; /* Success text */
+    border: 1px solid #c3e6cb; /* Success border */
+}
+
+.hidden {
+    opacity: 0;
+}
+
+/* Section styling */
+section {
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 900px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    margin-bottom: 20px;
+    color: #333; /* Darker text */
+}
+
+/* Report table styling */
+.report-container {
+    margin-top: 40px;
+    width: 100%;
+    text-align: center;
+}
+
+.header, .row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Divider between rows */
+}
+
+.header {
+    background-color: #f1f1f1; /* Header background */
+    font-weight: bold;
+    font-size: 14px;
+    color: #333; /* Header text color */
+}
+
+.row {
+    background-color: #fff; /* Row background */
+    font-size: 13px;
+}
+
+.report-container .row:nth-child(odd) {
+    background-color: #f9f9f9; /* Alternate row background */
+}
+
+/* Button styling */
+.button {
+    background-color: #007bff; /* Primary button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 30px;
+    text-align: right;
+    font-size: 14px;
+    color: #777; /* Subtle footer text */
+}
+
+body > form:nth-child(2) {
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    section {
+        width: 90%;
+    }
+
+    .header, .row {
+        grid-template-columns: repeat(2, 1fr); /* Adapt grid on small screens */
+    }
+}

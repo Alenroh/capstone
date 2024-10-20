@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Class Management</title>
+
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" th:href="@{/css/college-class.css}">
+
+    <style>
+        /* Initially show the messages */
+        .error-message, .success-message {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Hidden state to fade out the messages */
+        .hidden {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- Top Navigation -->
+<nav>
+    <ul>
+        <li><a th:href="@{/user-main}">User Management</a></li>
+        <li><a th:href="@{/college-class}">Manage College Classes</a></li>
+        <li><a th:href="@{/class-report}">Create Class Report</a></li>
+        <li><a th:href="@{/}">Back to Home</a></li>
+    </ul>
+</nav>
+
+<!-- Error and Success Messages -->
+<div th:if="${errorMessage}" class="error-message" id="errorMessage" style="display:none;">
+    <p th:text="${errorMessage}"></p>
+</div>
+<div th:if="${successMessage}" class="success-message" id="successMessage" style="display:none;">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<!-- List of College Classes -->
+<section>
+    <h2>All College Classes</h2>
+    <ul>
+        <li th:each="collegeClass : ${classes}">
+            <span th:text="${collegeClass.className} + ' - ' + ${collegeClass.classCode}"></span>
+            <form th:action="@{/college-class/edit}" method="get" style="display:inline;">
+                <input type="hidden" name="id" th:value="${collegeClass.id}"/>
+                <button type="submit">Edit</button>
+            </form>
+            <form th:action="@{/college-class/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${collegeClass.id}"/>
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
+</section>
+
+<!-- Dynamic Form Section for Adding or Editing College Classes -->
+<section id="class-form-section">
+    <h2 th:text="${newClass.id != null ? 'Edit College Class' : 'Add New College Class'}"></h2>
+
+    <!-- Form for Adding/Editing College Classes -->
+    <form th:action="@{/college-class/save}" th:object="${newClass}" method="post" id="classForm">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label for="className">Class Name:</label>
+            <input type="text" id="className" th:field="*{className}" placeholder="Enter class name" required />
+        </div>
+
+        <div>
+            <label for="credits">Credits:</label>
+            <input type="number" id="credits" th:field="*{credits}" placeholder="Enter number of credits" required />
+        </div>
+
+        <div>
+            <label for="instructor">Instructor:</label>
+            <input type="text" id="instructor" th:field="*{instructor}" placeholder="Enter instructor name" required />
+        </div>
+
+        <div>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" th:field="*{startDate}" required />
+        </div>
+
+        <div>
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" th:field="*{endDate}" required />
+        </div>
+
+        <div>
+            <label for="classCode">Class Code:</label>
+            <input type="text" id="classCode" th:field="*{classCode}" placeholder="Enter class code" required />
+        </div>
+
+        <!-- Dropdown to associate college class with a user -->
+        <div>
+            <label for="user">User:</label>
+            <select id="user" th:field="*{user.id}" required>
+                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"
+                        th:selected="${user.id == newClass.user?.id}"></option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit" th:text="${newClass.id != null ? 'Update Class' : 'Add Class'}"></button>
+        </div>
+    </form>
+</section>
+
+<script>
+    document.getElementById('classForm').addEventListener('submit', function (event) {
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
+        const userSelect = document.getElementById('user');
+
+        // Validate start date and end date
+        if (startDate > endDate) {
+            alert('Error: Start date cannot be after the end date.');
+            event.preventDefault();  // Prevent form submission
+        }
+
+        // Ensure user is selected
+        if (userSelect.value === "") {
+            alert('Error: User must be selected.');
+            event.preventDefault();  // Prevent form submission
+        }
+    });
+
+    // Show messages and hide them after 30 seconds (error) or 20 seconds (success)
+    window.onload = function() {
+        var errorMessage = document.getElementById('errorMessage');
+        var successMessage = document.getElementById('successMessage');
+
+        // Check and display error message if exists
+        if (errorMessage && errorMessage.textContent.trim() !== "") {
+            errorMessage.style.display = 'block';
+            setTimeout(function() {
+                errorMessage.classList.add('hidden');
+                setTimeout(() => errorMessage.style.display = 'none', 500);  // Hide after fade-out
+            }, 30000); // 30 seconds
+        }
+
+        // Check and display success message if exists
+        if (successMessage && successMessage.textContent.trim() !== "") {
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.classList.add('hidden');
+                setTimeout(() => successMessage.style.display = 'none', 500);  // Hide after fade-out
+            }, 20000); // 20 seconds
+        }
+    };
+</script>
+
+</body>
+</html>

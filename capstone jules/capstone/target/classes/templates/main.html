@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Screen</title>
+
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<!-- Top Navigation -->
+<nav>
+    <ul>
+        <li><a th:href="@{/user-main}">User Management</a></li>
+        <li><a th:href="@{/college-class}">Manage College Classes</a></li>
+        <li><a th:href="@{/class-report}">Create Class Report</a></li>
+    </ul>
+</nav>
+
+<!-- Error Message Section -->
+<div class="message error" th:if="${errorMessage != null}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<!-- Success Message Section -->
+<div class="message success" th:if="${successMessage != null}">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<!-- Header and Subheading -->
+<header>
+    <h1>Welcome to the Class Management System</h1>
+    <h2>Your one-stop solution for managing users, college classes, and reports</h2>
+</header>
+
+<!-- Welcome Message -->
+<section>
+    <p>Welcome! This platform allows you to manage users, create and track college classes, and generate comprehensive reports.</p>
+    <p>Use the navigation above or sections below to get started:</p>
+</section>
+
+<!-- Instructions -->
+<section>
+    <h3>Instructions</h3>
+    <ul>
+        <li>To manage users, click on "User Management". From there, you can view, add, or update users.</li>
+        <li>To manage college classes, click on "Manage College Classes". You will be able to create, view, and edit class details.</li>
+        <li>To generate reports, click on "Create Class Report". You can create detailed reports based on class data and user activity.</li>
+    </ul>
+</section>
+
+<!-- Navigation Sections -->
+<nav>
+    <section>
+        <h3>User Management</h3>
+        <p>View, add, or update users in the system.</p>
+        <a th:href="@{/user-main}">Go to User Management</a>
+    </section>
+
+    <section>
+        <h3>Manage College Classes</h3>
+        <p>Keep track of the classes being offered, update class details, and view schedules.</p>
+        <a th:href="@{/college-class}">Go to College Classes</a>
+    </section>
+
+    <section>
+        <h3>Create Class Report</h3>
+        <p>Generate detailed reports based on class data and user activity.</p>
+        <a th:href="@{/class-report}">Create Class Report</a>
+    </section>
+</nav>
+</body>
+</html>

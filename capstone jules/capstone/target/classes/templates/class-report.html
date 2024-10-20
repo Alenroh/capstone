@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Class Report</title>
+
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" th:href="@{/css/class-report.css}">
+
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Include jQuery and Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav>
+    <ul>
+        <li><a th:href="@{/user-main}">User Management</a></li>
+        <li><a th:href="@{/college-class}">Manage College Classes</a></li>
+        <li><a th:href="@{/class-report}">Create Class Report</a></li>
+        <li><a th:href="@{/}">Back to Home</a></li>
+    </ul>
+</nav>
+
+<!-- Error and Success Messages -->
+<div th:if="${errorMessage}" class="error-message" id="errorMessage">
+    <p th:text="${errorMessage}"></p>
+</div>
+<div th:if="${successMessage}" class="success-message" id="successMessage">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<!-- Form to select user and trigger report generation -->
+<form th:if="${!reportGenerated}" th:action="@{/class-report/generate}" method="get">
+    <div>
+        <label for="userSelect">Select a Student/User:</label>
+        <select id="userSelect" name="userId" class="select2" required>
+            <option value="" disabled selected>Select a user</option>
+            <!-- Display full name (first and last name) with the user ID -->
+            <option th:each="user : ${users}" th:value="${user.id}"
+                    th:text="${user.firstName} + ' ' + ${user.lastName} + ' (' + ${user.email} + ')'">
+            </option>
+        </select>
+    </div>
+    <button class="button" type="submit">Generate Report</button>
+</form>
+
+<!-- Display report if generated -->
+<div th:if="${reportGenerated}">
+    <h2>Generated Report for <span th:text="${selectedUser.firstName + ' ' + selectedUser.lastName}"></span></h2>
+
+    <!-- Display associated classes if available -->
+    <div class="report-container">
+        <p><strong>Class Information:</strong></p>
+        <div class="header">
+            <div>Class ID</div>
+            <div>Class Name</div>
+            <div>Credits</div>
+            <div>Instructor</div>
+            <div>Start Date</div>
+            <div>End Date</div>
+            <div>Class Code</div>
+        </div>
+        <div th:each="class : ${classes}">
+            <div class="row">
+                <div th:text="${class.id}"></div>
+                <div th:text="${class.className}"></div>
+                <div th:text="${class.credits}"></div>
+                <div th:text="${class.instructor}"></div>
+                <div th:text="${#dates.format(class.startDate, 'yyyy-MM-dd')}"></div>
+                <div th:text="${#dates.format(class.endDate, 'yyyy-MM-dd')}"></div>
+                <div th:text="${class.classCode}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display report creation status -->
+    <div class="footer">
+        <p>Report generated on: <span th:text="${currentDate}"></span></p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#userSelect').select2({
+            placeholder: "Select a user",
+            allowClear: true
+        });
+    });
+</script>
+
+</body>
+</html>
